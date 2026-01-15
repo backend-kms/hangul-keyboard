@@ -1,5 +1,7 @@
 import unittest
 from hangul_keyboard.core import (
+    decompose_hangul_full,
+    decompose_hangul_str,
     roman_keystrokes_to_jamo,
     compose_hangul,
     convert_roman_to_hangul,
@@ -137,6 +139,25 @@ class TestConvertRomanToHangul(unittest.TestCase):
     # 엣지 케이스
     def test_empty_string(self):
         self.assertEqual(convert_roman_to_hangul(""), "")
+
+class TestDecomposeHangul(unittest.TestCase):
+    """한글 음절 → 자모 분해"""
+
+    def test_full_list(self):
+        """종성 포함 리스트"""
+        self.assertEqual(decompose_hangul_full("가"), ['ㄱ','ㅏ'])
+        self.assertEqual(decompose_hangul_full("각"), ['ㄱ','ㅏ','ㄱ'])
+        self.assertEqual(decompose_hangul_full("한글"), ['ㅎ','ㅏ','ㄴ','ㄱ','ㅡ','ㄹ'])
+        self.assertEqual(decompose_hangul_full("123"), ['1','2','3'])
+        self.assertEqual(decompose_hangul_full(""), [])
+
+    def test_str_version(self):
+        """문자열 버전"""
+        self.assertEqual(decompose_hangul_str("가"), 'ㄱㅏ')
+        self.assertEqual(decompose_hangul_str("각"), 'ㄱㅏㄱ')
+        self.assertEqual(decompose_hangul_str("한글"), 'ㅎㅏㄴㄱㅡㄹ')
+        self.assertEqual(decompose_hangul_str("123"), '123')
+        self.assertEqual(decompose_hangul_str(""), '')
 
 
 if __name__ == "__main__":

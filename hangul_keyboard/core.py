@@ -92,6 +92,39 @@ def convert_roman_to_hangul(text: str) -> str:
     jamo = roman_keystrokes_to_jamo(text)
     return compose_hangul(jamo)
 
+def decompose_hangul_full(text: str) -> list[str]:
+    """
+    Decompose Hangul syllables into jamo sequence.
+    Non-Hangul characters are returned as-is.
+    """
+    result = []
+
+    for char in text:
+        code = ord(char)
+
+        if 0xAC00 <= code <= 0xD7A3:
+            syllable_index = code - 0xAC00
+            cho_idx = syllable_index // (21 * 28)
+            jung_idx = (syllable_index % (21 * 28)) // 28
+            jong_idx = syllable_index % 28
+
+            result.append(CHOSUNGS[cho_idx])
+            result.append(JOONGSUNGS[jung_idx])
+
+            if jong_idx != 0:
+                result.append(JONGSUNGS[jong_idx])
+
+        else:
+            result.append(char)
+
+    return result
+
+def decompose_hangul_str(text: str) -> str:
+    """
+    Decompose Hangul syllables into jamo sequence string.
+    Non-Hangul characters are returned as-is.
+    """
+    return "".join(decompose_hangul_full(text))
+
 if __name__ == "__main__":
-    print(convert_roman_to_hangul("rkqt"))     # → "산" (종성 처리)
-    print(convert_roman_to_hangul("R"))       # → "ㄱ" (쌍초성)
+    pass

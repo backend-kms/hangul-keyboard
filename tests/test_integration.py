@@ -1,5 +1,5 @@
 import unittest
-from hangul_keyboard.core import convert_roman_to_hangul
+from hangul_keyboard.core import convert_roman_to_hangul, decompose_hangul_full, decompose_hangul_str
 
 
 class TestIntegration(unittest.TestCase):
@@ -75,6 +75,21 @@ class TestIntegration(unittest.TestCase):
         result = convert_roman_to_hangul("dkssudgkqwkrhtk")
         self.assertTrue(len(result) > 0)
 
+    def test_full_list(self):
+        """decompose_hangul_full: 종성 포함 리스트"""
+        self.assertEqual(decompose_hangul_full("가"), ['ㄱ','ㅏ'])
+        self.assertEqual(decompose_hangul_full("각"), ['ㄱ','ㅏ','ㄱ'])
+        self.assertEqual(decompose_hangul_full("한글"), ['ㅎ','ㅏ','ㄴ','ㄱ','ㅡ','ㄹ'])
+        self.assertEqual(decompose_hangul_full("123"), ['1','2','3'])
+        self.assertEqual(decompose_hangul_full(""), [])
+
+    def test_str_version(self):
+        """decompose_hangul_str: 문자열 반환"""
+        self.assertEqual(decompose_hangul_str("가"), 'ㄱㅏ')
+        self.assertEqual(decompose_hangul_str("각"), 'ㄱㅏㄱ')
+        self.assertEqual(decompose_hangul_str("한글"), 'ㅎㅏㄴㄱㅡㄹ')
+        self.assertEqual(decompose_hangul_str("123"), '123')
+        self.assertEqual(decompose_hangul_str(""), '')
 
 if __name__ == "__main__":
     unittest.main()
